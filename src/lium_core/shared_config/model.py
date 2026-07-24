@@ -23,6 +23,11 @@ class SharedConfig(BaseModel):
     required_deposit_amount: dict[str, float]
     gpu_architectures: dict[str, dict]
     driver_cuda_map: dict[int, float]
+    # NVIDIA driver_version -> "md5:sha256" of libnvidia-ml, the validator's
+    # anti-tamper allowlist. Backend serves the full map from its nvml_driver_digest
+    # table (source of truth); empty here so an offline validator falls back to its
+    # own packaged LIB_NVIDIA_ML_DIGESTS constant (DAH-2451).
+    nvml_ml_digests: dict[str, str] = Field(default_factory=dict)
 
     # Scalars
     machine_max_price_rate: float
