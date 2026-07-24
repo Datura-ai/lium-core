@@ -28,6 +28,10 @@ class SharedConfig(BaseModel):
     # table (source of truth); empty here so an offline validator falls back to its
     # own packaged LIB_NVIDIA_ML_DIGESTS constant (DAH-2451).
     nvml_ml_digests: dict[str, str] = Field(default_factory=dict)
+    # NVIDIA driver versions confirmed to be spoofs (no matching official Linux
+    # release). Served so the validator rejects them without re-asking the backend
+    # to verify a version it already resolved as invalid (DAH-2451).
+    nvml_invalid_drivers: list[str] = Field(default_factory=list)
 
     # Scalars
     machine_max_price_rate: float

@@ -96,6 +96,23 @@ def test_nvml_ml_digests_defaults_when_absent() -> None:
     assert config.nvml_ml_digests == {}
 
 
+def test_nvml_invalid_drivers_defaults_to_empty() -> None:
+    assert DEFAULT_SHARED_CONFIG.nvml_invalid_drivers == []
+
+
+def test_nvml_invalid_drivers_accepts_values_and_serializes() -> None:
+    config = DEFAULT_SHARED_CONFIG.model_copy(update={"nvml_invalid_drivers": ["591.86"]})
+    assert config.nvml_invalid_drivers == ["591.86"]
+    assert config.model_dump()["nvml_invalid_drivers"] == ["591.86"]
+
+
+def test_nvml_invalid_drivers_defaults_when_absent() -> None:
+    config = SharedConfig.model_validate(
+        {k: v for k, v in DEFAULT_SHARED_CONFIG.model_dump().items() if k != "nvml_invalid_drivers"}
+    )
+    assert config.nvml_invalid_drivers == []
+
+
 def test_soft_limit_price_rate_defaults_when_absent() -> None:
     # backward-compatible: a config built without the new field falls back to 1.1
     config = SharedConfig.model_validate(
