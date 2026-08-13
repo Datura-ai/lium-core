@@ -53,6 +53,10 @@ class SharedConfig(BaseModel):
     # send it, or a payload that fails to load, must read as "off" rather than advertise the
     # feature.
     multinode_clusters_enabled: bool = False
+    # DAH-2667: the RoCE half of multi-node clusters, subordinate to the switch above. Same
+    # contract: mirrors what the backend's rent gate enforces, defaults False so an older backend
+    # or a failed payload reads as "off" and the UI never offers a RoCE cluster the server refuses.
+    roce_clusters_enabled: bool = False
     # Provider payout timing (DAH-2370). Surfaced so the provider portal can show
     # an expected (not guaranteed) payout time. Optional with defaults so older
     # serialized configs still validate.

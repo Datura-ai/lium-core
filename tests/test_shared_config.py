@@ -71,6 +71,11 @@ def test_multinode_clusters_flag_defaults_to_off() -> None:
     assert DEFAULT_SHARED_CONFIG.multinode_clusters_enabled is False
 
 
+def test_roce_clusters_flag_defaults_to_off() -> None:
+    # same fail-closed contract for the RoCE half (DAH-2667)
+    assert DEFAULT_SHARED_CONFIG.roce_clusters_enabled is False
+
+
 def test_machine_prices_p90_defaults_to_empty() -> None:
     # backward-compatible: constructing without the new field yields an empty dict
     assert DEFAULT_SHARED_CONFIG.machine_prices_p90 == {}
