@@ -334,7 +334,7 @@ def test_refresh_skips_on_fetch_failure() -> None:
 
 
 def test_refresh_sleep_is_jittered() -> None:
-    # sleep duration must stay within +/-20% of refresh_interval
+    # sleep is refresh_interval scaled by the random jitter factor
     mock_get = MagicMock(return_value=_make_response(SAMPLE_CONFIG_DATA))
     with patch("lium_core.shared_config.client.requests.get", mock_get):
         client = _build_client(mock_get)
@@ -348,12 +348,13 @@ def test_refresh_sleep_is_jittered() -> None:
     with (
         patch("lium_core.shared_config.client.requests.get", mock_get),
         patch("lium_core.shared_config.client.time.sleep", side_effect=_record_and_stop),
+        patch("lium_core.shared_config.client.random.uniform", return_value=1.15) as mock_uniform,
     ):
         client._running = True
         client._refresh_loop()
 
-    assert len(slept) == 1
-    assert client._refresh_interval * 0.8 <= slept[0] <= client._refresh_interval * 1.2
+    mock_uniform.assert_called_once_with(0.8, 1.2)
+    assert slept == [client._refresh_interval * 1.15]
 
 
 # ==================== Client tests: .config property ====================
